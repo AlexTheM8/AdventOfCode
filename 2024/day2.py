@@ -2,7 +2,7 @@ import math
 
 
 def part1():
-    with open('2024/input/day2.txt', 'r') as f:
+    with open('./input/day2.txt', 'r') as f:
         safeCnt = 0
         lines = f.readlines()
         # count number of safe reports
@@ -47,7 +47,7 @@ def checkDiff(report, errCnt):
 
 def part2():
     # same process, but if removing one number makes it safe, it still counts
-    with open('2024/input/day2.txt', 'r') as f:
+    with open('./input/day2.txt', 'r') as f:
         safeCnt = 0
         lines = f.readlines()
         # count number of safe reports

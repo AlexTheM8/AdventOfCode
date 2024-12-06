@@ -3,7 +3,7 @@ import math
 
 def part1():
     distance = 0
-    with open('2024/input/day1.txt', 'r') as f:
+    with open('./input/day1.txt', 'r') as f:
         lines = f.readlines()
         a, b = [], []
         for line in lines:
@@ -19,7 +19,7 @@ def part1():
 
 def part2():
     similarity = 0
-    with open('2024/input/day1.txt', 'r') as f:
+    with open('./input/day1.txt', 'r') as f:
         lines = f.readlines()
         a, b = [], []
         for line in lines:

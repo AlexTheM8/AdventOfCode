@@ -2,7 +2,7 @@ import re
 
 
 def part1():
-    with open('2024/input/day3.txt', 'r') as f:
+    with open('./input/day3.txt', 'r') as f:
         lines = f.readlines()
         total = 0
         for line in lines:
@@ -20,7 +20,7 @@ def findMu(line):
 
 
 def part2():
-    with open('2024/input/day3.txt', 'r') as f:
+    with open('./input/day3.txt', 'r') as f:
         line = ''.join(f.readlines())
         total = 0
         enabled = True
