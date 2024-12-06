@@ -1,80 +1,43 @@
+from itertools import product
 from enum import Enum
 
 
-class DirOptions(Enum):
-    DIAG_UP_LEFT = 'dul'
+class Direction(Enum):
     UP = 'u'
-    DIAG_UP_RIGHT = 'dur'
     RIGHT = 'r'
-    DIAG_DOWN_RIGHT = 'ddr'
     DOWN = 'd'
-    DIAG_DOWN_LEFT = 'ddl'
     LEFT = 'l'
 
 
 SEARCH_STRING = 'XMAS'
 
 
-def localSearch(coord, searchSpace, searchIdx, direction=None):
+def localSearch(coord, searchSpace, searchIdx, directions):
     x, y = coord
     width, height = len(searchSpace), len(searchSpace[0])
-    match direction:
-        case DirOptions.DIAG_UP_LEFT:
-            if x == 0 or y == 0:
-                return 0
-            if searchSpace[x-1][y-1] == SEARCH_STRING[searchIdx]:
-                if searchIdx == len(SEARCH_STRING) - 1:
-                    return 1
-                return localSearch((x-1, y-1), searchSpace, searchIdx + 1, direction=DirOptions.DIAG_UP_LEFT)
-        case DirOptions.UP:
-            if y == 0:
-                return 0
-            if searchSpace[x][y - 1] == SEARCH_STRING[searchIdx]:
-                if searchIdx == len(SEARCH_STRING) - 1:
-                    return 1
-                return localSearch((x, y - 1), searchSpace, searchIdx + 1, direction=DirOptions.UP)
-        case DirOptions.DIAG_UP_RIGHT:
-            if y == 0 or x == width - 1:
-                return 0
-            if searchSpace[x + 1][y - 1] == SEARCH_STRING[searchIdx]:
-                if searchIdx == len(SEARCH_STRING) - 1:
-                    return 1
-                return localSearch((x + 1, y - 1), searchSpace, searchIdx + 1, direction=DirOptions.DIAG_UP_RIGHT)
-        case DirOptions.RIGHT:
-            if x == width - 1:
-                return 0
-            if searchSpace[x + 1][y] == SEARCH_STRING[searchIdx]:
-                if searchIdx == len(SEARCH_STRING) - 1:
-                    return 1
-                return localSearch((x + 1, y), searchSpace, searchIdx + 1, direction=DirOptions.RIGHT)
-        case DirOptions.DIAG_DOWN_RIGHT:
-            if x == width - 1 or y == height - 1:
-                return 0
-            if searchSpace[x + 1][y + 1] == SEARCH_STRING[searchIdx]:
-                if searchIdx == len(SEARCH_STRING) - 1:
-                    return 1
-                return localSearch((x + 1, y + 1), searchSpace, searchIdx + 1, direction=DirOptions.DIAG_DOWN_RIGHT)
-        case DirOptions.DOWN:
-            if y == height - 1:
-                return 0
-            if searchSpace[x][y + 1] == SEARCH_STRING[searchIdx]:
-                if searchIdx == len(SEARCH_STRING) - 1:
-                    return 1
-                return localSearch((x, y + 1), searchSpace, searchIdx + 1, direction=DirOptions.DOWN)
-        case DirOptions.DIAG_DOWN_LEFT:
-            if x == 0 or y == height - 1:
-                return 0
-            if searchSpace[x - 1][y + 1] == SEARCH_STRING[searchIdx]:
-                if searchIdx == len(SEARCH_STRING) - 1:
-                    return 1
-                return localSearch((x - 1, y + 1), searchSpace, searchIdx + 1, direction=DirOptions.DIAG_DOWN_LEFT)
-        case DirOptions.LEFT:
-            if x == 0:
-                return 0
-            if searchSpace[x - 1][y] == SEARCH_STRING[searchIdx]:
-                if searchIdx == len(SEARCH_STRING) - 1:
-                    return 1
-                return localSearch((x - 1, y), searchSpace, searchIdx + 1, direction=DirOptions.LEFT)
+    x1, y1 = x, y  # Next coords
+    for d in directions:
+        match d:
+            case Direction.UP:
+                if y == 0:
+                    return 0
+                y1 -= 1
+            case Direction.RIGHT:
+                if x == width - 1:
+                    return 0
+                x1 += 1
+            case Direction.DOWN:
+                if y == height - 1:
+                    return 0
+                y1 += 1
+            case Direction.LEFT:
+                if x == 0:
+                    return 0
+                x1 -= 1
+    if searchSpace[x1][y1] == SEARCH_STRING[searchIdx]:
+        if searchIdx == len(SEARCH_STRING) - 1:
+            return 1
+        return localSearch((x1, y1), searchSpace, searchIdx + 1, directions)
     return 0
 
 
@@ -99,10 +62,14 @@ def part1():
         xmasCnt = 0
         for i, line in enumerate(lines):
             for j, c in enumerate(line):
-                if c != SEARCH_STRING[0]:
-                    continue
-                for op in DirOptions:
-                    xmasCnt += localSearch((i, j), lines, 1, direction=op)
+                if c == SEARCH_STRING[0]:
+                    # Cardinal
+                    for op in Direction:
+                        xmasCnt += localSearch((i, j), lines, 1, [op])
+                    # Diagonal
+                    for dirs in product([Direction.UP, Direction.DOWN], [Direction.RIGHT, Direction.LEFT]):
+                        xmasCnt += localSearch((i, j), lines, 1, dirs)
+
         print(xmasCnt)
 
 
@@ -119,4 +86,4 @@ def part2():
         print(xmasCnt)
 
 
-part2()
+part1()
