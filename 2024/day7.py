@@ -8,7 +8,7 @@ def validEq(vals, target, useOr=False):
         or useOr and validEq([int(str(vals[0]) + str(vals[1]))] + vals[2:], target, useOr)
 
 
-def part1and2():
+def part1and2(part2=False):
     with open('./input/day7.txt') as f:
         lines = f.read().splitlines()
         total = 0
@@ -17,9 +17,9 @@ def part1and2():
             res = int(res)
             vals = list(map(int, vals.split(' ')))
             # useOr = True for part 2
-            if validEq(vals, res, useOr=True):
+            if validEq(vals, res, useOr=part2):
                 total += res
         print(total)
 
 
-part1and2()
+part1and2(part2=True)
